@@ -53,7 +53,7 @@ if st.button("Predict"):
     probability = predicted_proba[predicted_class] * 100
 
     # 显示预测结果，使用 Matplotlib 渲染指定字体
-    text = f"Based on feature values, predicted possibility of AKI is {probability:.2f}%"
+    text = f"Based on feature values, predicted possibility of Lung Meatstasis is {probability:.2f}%"
     fig, ax = plt.subplots(figsize=(8, 1))
     ax.text(
         0.5, 0.5, text,
@@ -67,8 +67,14 @@ if st.button("Predict"):
     st.image("prediction_text.png")
 
     # 计算 SHAP 值
-    explainer = shap.KernelExplainer(model)
-    shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_ranges.keys()))
+    # 加载背景数据
+    background = pd.read_csv("shap_background.csv")
+
+    # 初始化 SHAP 解释器
+    explainer = shap.KernelExplainer(model.predict_proba, background)
+
+    # 计算 SHAP 值（对当前输入）
+    shap_values = explainer.shap_values(feature_df)
 
     # 生成 SHAP 力图
     class_index = predicted_class  # 当前预测类别
