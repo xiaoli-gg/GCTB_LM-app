@@ -98,6 +98,29 @@ if st.button("Predict"):
     plt.xlabel("Probability", fontsize=14, fontweight='bold')
     plt.ylabel("Classes", fontsize=14, fontweight='bold')
     
+    # 添加数值标签
+    for i, v in enumerate([sample_prob['Class_0'], sample_prob['Class_1']]):
+        plt.text(
+            v + 0.02,  # 添加一点右移以避免文字重叠
+            i, 
+            f"{v:.2f}", 
+            va='center', 
+            fontsize=14, 
+            color='black', 
+            fontweight='bold'
+        )
+
+    # 美化边框（隐藏上右边框）
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    # 限制 x 轴范围为 0 到 1，避免比例超界时图变形
+    plt.xlim(0, 1)
+
+    # 展示图像
+    st.pyplot(plt)
+    
     # SHAP 分析，注意“这里所用的模型是Bagclassifier，所以需要background数据，如果是tree模型的话就不需要”
     background = pd.read_csv("shap_background.csv")
     explainer = shap.KernelExplainer(model.predict, background)
