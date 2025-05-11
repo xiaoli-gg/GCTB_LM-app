@@ -18,27 +18,43 @@ feature_ranges = {
     "Tumor_Size": {"type": "categorical", "options": [0, 1, 2]},
 }
 
-# Streamlit 界面
-#st.title("Prediction Model with SHAP Visualization")
+# 设置标题
+st.set_page_config(page_title='AI-assisted Lung Metastasis Prediction Tool')
 st.title("Artificial intelligence-assisted Lung metastasis and prognosis model for patients with GCTB")
 
-# 动态生成输入项
-st.header("Enter the following feature values:")
+# 定义特征范围
+feature_ranges = {
+    "Surgy": {"type": "categorical", "options": [0, 1, 2, 3]},
+    "Age": {"type": "categorical", "options": [0, 1]},
+    "T": {"type": "categorical", "options": [0, 1, 2, 3, 4]},
+    "N": {"type": "categorical", "options": [0, 1, 2]},
+    "Tumor_Size": {"type": "categorical", "options": [0, 1, 2]},
+}
+
+# 左侧输入面板
+st.sidebar.header("🔢 Input Features")
+
 feature_values = []
 for feature, properties in feature_ranges.items():
     if properties["type"] == "numerical":
-        value = st.number_input(
+        value = st.sidebar.number_input(
             label=f"{feature} ({properties['min']} - {properties['max']})",
             min_value=float(properties["min"]),
             max_value=float(properties["max"]),
             value=float(properties["default"]),
         )
     elif properties["type"] == "categorical":
-        value = st.selectbox(
+        value = st.sidebar.selectbox(
             label=f"{feature} (Select a value)",
             options=properties["options"],
         )
     feature_values.append(value)
+
+# 页面底部版权信息
+st.sidebar.markdown("---")
+st.sidebar.markdown("##### All rights reserved") 
+st.sidebar.markdown("##### Contact: mengpanli163@163.com (Mengpan Li, Shanghai Jiao Tong University School of Medicine)")
+
 
 # 转换为模型输入格式
 features = np.array([feature_values])
