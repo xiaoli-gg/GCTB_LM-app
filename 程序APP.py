@@ -80,7 +80,7 @@ if st.button("Predict"):
     shap_values = explainer.shap_values(feature_df)
 
     # 显示 SHAP 力图（嵌入 HTML 渲染）
-    shap.initjs()
+    # shap.initjs()
     force_plot_html = shap.force_plot(
         explainer.expected_value[predicted_class],
         shap_values[predicted_class][0],
