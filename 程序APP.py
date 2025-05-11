@@ -43,54 +43,40 @@ for feature, properties in feature_ranges.items():
 # 转换为模型输入格式
 features = np.array([feature_values])
 
-import streamlit.components.v1 as components
-
-# 预测与 SHAP 可视化
+# 预测与解释
 if st.button("Predict"):
-    # 构造输入 DataFrame
+    # 构造输入
     features = np.array([feature_values])
     feature_df = pd.DataFrame(features, columns=feature_ranges.keys())
 
-    # 模型预测
+    # 预测
     predicted_class = model.predict(features)[0]
     predicted_proba = model.predict_proba(features)[0]
-    probability = predicted_proba[predicted_class] * 100
+    probability = predicted_proba[1] * 100  # 二分类中通常 [1] 为“阳性”类
 
-    # 显示预测结果图像
-    text = f"Based on feature values, predicted possibility of Lung Metastasis is {probability:.2f}%"
+    # 显示预测结果
+    text = f"Predicted probability of Lung Metastasis: {probability:.2f}%"
     fig, ax = plt.subplots(figsize=(8, 1))
-    ax.text(
-        0.5, 0.5, text,
-        fontsize=16,
-        ha='center', va='center',
-        fontname='Times New Roman',
-        transform=ax.transAxes
-    )
+    ax.text(0.5, 0.5, text, fontsize=16, ha='center', va='center',
+            fontname='Times New Roman', transform=ax.transAxes)
     ax.axis('off')
     plt.savefig("prediction_text.png", bbox_inches='tight', dpi=300)
     st.image("prediction_text.png")
 
-    # 加载背景数据
+    # SHAP 分析（使用二分类结构）
     background = pd.read_csv("shap_background.csv")
-
-    # 初始化 SHAP 解释器
     explainer = shap.KernelExplainer(model.predict_proba, background)
-
-    # 计算 SHAP 值
     shap_values = explainer.shap_values(feature_df)
 
-    # 判断 shap_values 类型：多分类是 list，二分类是 ndarray
-    if isinstance(shap_values, list):
-        shap_value = shap_values[predicted_class][0]
-    else:
-         shap_value = shap_values[0]  # 二分类模型输出
-        
-    # 显示 SHAP 力图（嵌入 HTML 渲染）
-    # 生成 force_plot
+    # 获取当前样本的 SHAP 值（取 index=0 的那一行）
+    shap_value = shap_values[0]  # 因为只有一行样本
+    expected_value = explainer.expected_value[1]  # 二分类，取正类（label=1）的 base value
+
+    # 渲染 SHAP force plot（嵌入 HTML）
     force_plot_html = shap.force_plot(
-        explainer.expected_value[predicted_class] if isinstance(shap_values, list) else explainer.expected_value,
-        shap_value,
-        feature_df.iloc[0],
+        base_value=expected_value,
+        shap_values=shap_value,
+        features=feature_df.iloc[0],
         matplotlib=False,
         show=False
     )
