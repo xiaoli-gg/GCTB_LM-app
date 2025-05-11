@@ -67,7 +67,7 @@ if st.button("Predict"):
     st.image("prediction_text.png")
 
     # 计算 SHAP 值
-    explainer = shap.TreeExplainer(model)
+    explainer = shap.KernelExplainer(model)
     shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_ranges.keys()))
 
     # 生成 SHAP 力图
