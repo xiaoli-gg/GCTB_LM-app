@@ -83,14 +83,15 @@ if st.button("Predict"):
     if isinstance(shap_values, list):
         shap_value = shap_values[predicted_class][0]
     else:
+         shap_value = shap_values[0]  # 二分类模型输出
         
     # 显示 SHAP 力图（嵌入 HTML 渲染）
     # 生成 force_plot
     force_plot_html = shap.force_plot(
         explainer.expected_value[predicted_class] if isinstance(shap_values, list) else explainer.expected_value,
-    shap_value,
-    feature_df.iloc[0],
-    matplotlib=False,
-    show=False
-)
+        shap_value,
+        feature_df.iloc[0],
+        matplotlib=False,
+        show=False
+    )
     components.html(force_plot_html.html(), height=300)
