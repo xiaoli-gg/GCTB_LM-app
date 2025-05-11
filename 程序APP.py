@@ -70,9 +70,9 @@ if st.button("Predict"):
 
     a = 0
     shap_fig = shap.plots.force(
-        explainer.expected_value[1],  # 如果是二分类，取第1类的 expected_value 
-        shap_values[1][0],            # 第1类对应的 SHAP 值
-        feature_df.iloc[0],
+        explainer.expected_value,  # 如果是二分类，取第1类的 expected_value 
+        shap_values[a], 
+        feature_df.iloc[a, :],
         matplotlib=True,
         show=False
     )
