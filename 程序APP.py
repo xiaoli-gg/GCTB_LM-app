@@ -63,14 +63,15 @@ if st.button("Predict"):
     plt.savefig("prediction_text.png", bbox_inches='tight', dpi=300)
     st.image("prediction_text.png")
 
-    # SHAP 分析（使用二分类结构）
+    # SHAP 分析，注意“这里所用的模型是Bagclassifier，所以需要background数据，如果是tree模型的话就不需要”
     background = pd.read_csv("shap_background.csv")
     explainer = shap.KernelExplainer(model.predict, background)
     shap_values = explainer.shap_values(feature_df)
 
+    # 因为feature_df只有一个样本，所以a只能为0
     a = 0
     shap_fig = shap.plots.force(
-        explainer.expected_value,  # 如果是二分类，取第1类的 expected_value 
+        explainer.expected_value,  
         shap_values[a], 
         feature_df.iloc[a, :],
         matplotlib=True,
