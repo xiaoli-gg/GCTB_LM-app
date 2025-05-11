@@ -65,19 +65,19 @@ if st.button("Predict"):
 
     # SHAP 分析（使用二分类结构）
     background = pd.read_csv("shap_background.csv")
-    explainer = shap.KernelExplainer(model.predict_proba, background)
+    explainer = shap.KernelExplainer(model.predict, background)
     shap_values = explainer.shap_values(feature_df)
 
-    # 获取当前样本的 SHAP 值（取 index=0 的那一行）
-    shap_value = shap_values[0]  # 因为只有一行样本
-    expected_value = explainer.expected_value[1]  # 二分类，取正类（label=1）的 base value
-
-    # 渲染 SHAP force plot（嵌入 HTML）
-    force_plot_html = shap.force_plot(
-        base_value=expected_value,
-        shap_values=shap_value,
-        features=feature_df.iloc[0],
-        matplotlib=False,
+    a = 0
+    shap_fig = shap.plots.force(
+        explainer.expected_value[1],  # 如果是二分类，取第1类的 expected_value 
+        shap_values[1][0],            # 第1类对应的 SHAP 值
+        feature_df.iloc[0],
+        matplotlib=True,
         show=False
     )
-    components.html(force_plot_html.html(), height=300)
+    # 保存并显示 SHAP 图
+    plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)
+    st.image("shap_force_plot.png")
+
+
