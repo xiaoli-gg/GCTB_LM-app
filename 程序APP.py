@@ -79,6 +79,25 @@ if st.button("Predict"):
     plt.savefig("prediction_text.png", bbox_inches='tight', dpi=300)
     st.image("prediction_text.png")
 
+    # 模拟预测概率（替换成你的实际结果）
+    sample_prob = {
+        'Class_0': predicted_proba[0],  # 未患病概率
+        'Class_1': predicted_proba[1]   # 患病概率
+    }
+
+    # 设置图形大小
+    plt.figure(figsize=(10, 3))
+
+    # 创建水平条形图
+    bars = plt.barh(['Not Sick', 'Sick'], 
+                    [sample_prob['Class_0'], sample_prob['Class_1']], 
+                    color=['#512b58', '#fe346e'])
+
+    # 添加标题和轴标签
+    plt.title("Prediction Probability for Patient", fontsize=20, fontweight='bold')
+    plt.xlabel("Probability", fontsize=14, fontweight='bold')
+    plt.ylabel("Classes", fontsize=14, fontweight='bold')
+    
     # SHAP 分析，注意“这里所用的模型是Bagclassifier，所以需要background数据，如果是tree模型的话就不需要”
     background = pd.read_csv("shap_background.csv")
     explainer = shap.KernelExplainer(model.predict, background)
