@@ -89,7 +89,7 @@ if st.button("Predict"):
     plt.figure(figsize=(10, 3))
 
     # 创建水平条形图
-    bars = plt.barh(['Not Sick', 'Sick'], 
+    bars = plt.barh(['Not Metastasis', 'Metastasis'], 
                     [sample_prob['Class_0'], sample_prob['Class_1']], 
                     color=['#512b58', '#fe346e'])
 
