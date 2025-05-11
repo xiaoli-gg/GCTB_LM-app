@@ -32,7 +32,7 @@ feature_ranges = {
 }
 
 # 左侧输入面板
-st.sidebar.header("🔢 Input Features")
+st.sidebar.header("Enter the following feature values:")
 
 feature_values = []
 for feature, properties in feature_ranges.items():
