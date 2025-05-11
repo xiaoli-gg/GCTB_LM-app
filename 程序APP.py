@@ -79,13 +79,18 @@ if st.button("Predict"):
     # 计算 SHAP 值
     shap_values = explainer.shap_values(feature_df)
 
+    # 判断 shap_values 类型：多分类是 list，二分类是 ndarray
+    if isinstance(shap_values, list):
+        shap_value = shap_values[predicted_class][0]
+    else:
+        
     # 显示 SHAP 力图（嵌入 HTML 渲染）
-    # shap.initjs()
+    # 生成 force_plot
     force_plot_html = shap.force_plot(
-        explainer.expected_value[predicted_class],
-        shap_values[predicted_class][0],
-        feature_df.iloc[0],
-        matplotlib=False,
-        show=False
-    )
+        explainer.expected_value[predicted_class] if isinstance(shap_values, list) else explainer.expected_value,
+    shap_value,
+    feature_df.iloc[0],
+    matplotlib=False,
+    show=False
+)
     components.html(force_plot_html.html(), height=300)
