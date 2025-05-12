@@ -10,7 +10,7 @@ model = joblib.load('Bag_model.pkl')
 
 # 特征范围定义（根据提供的特征范围和数据类型）
 feature_ranges = {
-    "Surgy": {"type": "categorical", "options": [0, 1, 2, 3]},
+    "Surgery": {"type": "categorical", "options": [0, 1, 2, 3]},
 #    "Age": {"type": "categorical", "min": 0.0, "max": 14417.0, "default": 5000.0},
     "Age": {"type": "categorical", "options": [0, 1]},
     "T": {"type": "categorical", "options": [0, 1, 2, 3, 4]},
@@ -24,7 +24,7 @@ st.title("Artificial intelligence-assisted Lung metastasis and prognosis model f
 
 # 定义特征范围
 feature_ranges = {
-    "Surgy": {"type": "categorical", "options": [0, 1, 2, 3]},
+    "Surgery": {"type": "categorical", "options": [0, 1, 2, 3]},
     "Age": {"type": "categorical", "options": [0, 1]},
     "T": {"type": "categorical", "options": [0, 1, 2, 3, 4]},
     "N": {"type": "categorical", "options": [0, 1, 2]},
